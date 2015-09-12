@@ -1,5 +1,7 @@
 #! /bin/sh
 
-for applet in blueman-applet nm-applet ; do
-  pgrep -x "${applet}" || "${applet}"
+for applet in light-locker blueman-applet nm-applet ; do
+  if (! pgrep -x "${applet}") ; then
+    ${applet} &
+  fi
 done
