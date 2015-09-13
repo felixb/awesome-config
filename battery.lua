@@ -16,19 +16,42 @@ local limits = {{25, 5},
           { 7, 1},
             {0}}
 
+function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
+
+function get_adapters()
+    local adapters = {'BAT0', 'BAT1'}
+    local found_adapters = {}
+    local c = 1
+    for i=1, #adapters do
+        if file_exists("/sys/class/power_supply/"..adapters[i].."/status") then
+	    found_adapters[c] = adapters[i]
+	    c = c + 1
+	end
+    end
+    return found_adapters
+end
+
 function get_bat_state (adapter)
-    local fcur = io.open("/sys/class/power_supply/"..adapter.."/energy_now")
-    local fcap = io.open("/sys/class/power_supply/"..adapter.."/energy_full")
-    local fsta = io.open("/sys/class/power_supply/"..adapter.."/status")
-    local facp = io.popen("acpi -b")
+    local adapter_path = "/sys/class/power_supply/"..adapter
+    local fprefix = ""
+    if file_exists(adapter_path.."/energy_now") then
+        fprefix = "energy"
+    else
+        fprefix = "charge"
+    end
+    local fcur = io.open(adapter_path.."/"..fprefix.."_now")
+    local fcap = io.open(adapter_path.."/"..fprefix.."_full")
+    local fsta = io.open(adapter_path.."/status")
     local cur = fcur:read()
     local cap = fcap:read()
     local sta = fsta:read()
-    local acp = facp:read()
     fcur:close()
     fcap:close()
     fsta:close()
-    facp:close()
+
     local battery = math.floor(cur * 100 / cap)
     if sta:match("Charging") then
         dir = 1
@@ -38,9 +61,21 @@ function get_bat_state (adapter)
         dir = 0
         battery = ""
     end
-    local idx = acp:find('remaining')
-    local time = acp:sub(idx - 8, idx - 5)
-    return battery, dir, time
+    return battery, dir
+end
+
+function get_bat_time ()
+    local facp = io.popen("acpi -b")
+    local acp = facp:read()
+    facp:close()
+
+    if acp:match('remaining') then
+        local idx = acp:find('remaining')
+        local time = acp:sub(idx - 8, idx - 5)
+        return time
+    else
+        return ''
+    end
 end
 
 function getnextlim (num)
@@ -63,9 +98,10 @@ function batclosure (adapter)
     local nextlim = limits[1][1]
     return function ()
         local prefix = "⚡"
-        local battery, dir, time = get_bat_state(adapter)
+        local battery, dir = get_bat_state(adapter)
+	local time = get_bat_time()
         if dir == -1 then
-            dirsign = "↓"
+            dirsign = "▼"
             prefix = "Bat: "
             prefix = prefix .. time
             if battery <= nextlim then
@@ -79,12 +115,12 @@ function batclosure (adapter)
                 nextlim = getnextlim(battery)
             end
         elseif dir == 1 then
-            dirsign = "↑"
+            dirsign = "▲"
             nextlim = limits[1][1]
         else
             dirsign = ""
         end
         if dir ~= 0 then battery = battery.."%" end
-        return " "..prefix.." "..dirsign..battery..dirsign.." "
+        return " "..prefix.." "..dirsign.." "..battery.." "
     end
 end
