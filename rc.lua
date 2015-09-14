@@ -171,7 +171,7 @@ require("battery")
 
 batterywidget = wibox.widget.textbox()
 batterywidget:set_align("right")
-bat_clo = battery.batclosure("BAT0")
+bat_clo = battery.batclosure()
 batterywidget:set_text(bat_clo())
 battery_timer = timer({timeout = 30})
 battery_timer:connect_signal("timeout", function() batterywidget:set_text(bat_clo()) end)

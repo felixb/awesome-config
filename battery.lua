@@ -59,7 +59,6 @@ function get_bat_state (adapter)
         dir = -1
     else
         dir = 0
-        battery = ""
     end
     return battery, dir
 end
@@ -93,34 +92,39 @@ function getnextlim (num)
     end
 end
 
-
-function batclosure (adapter)
+function batclosure ()
+    local adapters = get_adapters()
     local nextlim = limits[1][1]
     return function ()
         local prefix = "⚡"
-        local battery, dir = get_bat_state(adapter)
 	local time = get_bat_time()
-        if dir == -1 then
-            dirsign = "▼"
-            prefix = "Bat: "
-            prefix = prefix .. time
-            if battery <= nextlim then
-                naughty.notify({title = "⚡ Beware! ⚡",
-                            text = "Battery charge is low ( ⚡ "..battery.."%)!",
-                            timeout = 7,
-                            position = "bottom_right",
-                            fg = beautiful.fg_focus,
-                            bg = beautiful.bg_focus
-                            })
-                nextlim = getnextlim(battery)
+        local batteries = ""
+        for i=1, #adapters do
+            adapter = adapters[i]
+            local battery, dir = get_bat_state(adapter)
+            if dir == -1 then
+                dirsign = "▼"
+                prefix = "Bat: "
+                prefix = prefix .. time
+                if battery <= nextlim then
+                    naughty.notify({title = "⚡ Beware! ⚡",
+                                text = "Battery charge is low ( ⚡ "..battery.."%)!",
+                                timeout = 7,
+                                position = "bottom_right",
+                                fg = beautiful.fg_focus,
+                                bg = beautiful.bg_focus
+                                })
+                    nextlim = getnextlim(battery)
+                end
+            elseif dir == 1 then
+                dirsign = "▲"
+                nextlim = limits[1][1]
+            else
+                dirsign = ""
             end
-        elseif dir == 1 then
-            dirsign = "▲"
-            nextlim = limits[1][1]
-        else
-            dirsign = ""
+            battery = battery.."%"
+            batteries = batteries..dirsign.." "..battery.." "
         end
-        if dir ~= 0 then battery = battery.."%" end
-        return " "..prefix.." "..dirsign.." "..battery.." "
+        return " "..prefix.." "..batteries
     end
 end
