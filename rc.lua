@@ -11,7 +11,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -36,6 +35,36 @@ do
     end)
 end
 -- }}}
+
+
+-- Battery
+require("battery")
+
+batterywidget = wibox.widget.textbox()
+batterywidget:set_align("right")
+bat_clo = battery.batclosure()
+batterywidget:set_text(bat_clo())
+battery_timer = timer({timeout = 30})
+battery_timer:connect_signal("timeout", function() batterywidget:set_text(bat_clo()) end)
+battery_timer:start()
+--
+
+-- Volume
+require('volume')
+
+volumewidget = wibox.widget.textbox()
+volumewidget:set_align('right')
+volume_closure = volume.volume_closure()
+
+function update_volumewidget()
+  volumewidget:set_text(volume_closure())
+end
+
+update_volumewidget()
+volume_timer = timer({timeout = 60})
+volume_timer:connect_signal('timeout', update_volumewidget)
+volume_timer:start()
+--
 
 -- autostart
 awful.util.spawn_with_shell(".config/awesome/bin/autostart.sh")
@@ -166,17 +195,6 @@ mytasklist.buttons = awful.util.table.join(
                                               if client.focus then client.focus:raise() end
                                           end))
 
--- Battery
-require("battery")
-
-batterywidget = wibox.widget.textbox()
-batterywidget:set_align("right")
-bat_clo = battery.batclosure()
-batterywidget:set_text(bat_clo())
-battery_timer = timer({timeout = 30})
-battery_timer:connect_signal("timeout", function() batterywidget:set_text(bat_clo()) end)
-battery_timer:start()
-
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
@@ -206,6 +224,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(volumewidget)
     right_layout:add(batterywidget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -259,6 +278,12 @@ globalkeys = awful.util.table.join(
                 client.focus:raise()
             end
         end),
+
+    -- Media
+    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 -5%') ; update_volumewidget() end),
+    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 +5%') ; update_volumewidget() end),
+    awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('pactl set-sink-mute 0 toggle') ; update_volumewidget() end),
+
 
     -- Standard program
     awful.key({ modkey,           }, "t", function () awful.util.spawn(terminal) end),
