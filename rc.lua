@@ -72,7 +72,7 @@ awful.util.spawn_with_shell(".config/awesome/bin/autostart.sh")
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 --- beautiful.init("/usr/share/awesome/themes/default/theme.lua")
-beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
+beautiful.init(".config/awesome/themes/zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -110,10 +110,13 @@ end
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
-tags = {}
+tags = {
+    names   = { 'www',      'msg',      'dev',      4,          5,          6,          7,          8,          9 },
+    layouts = { layouts[2], layouts[2], layouts[2], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] } 
+}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 'www', 'msg', 'dev', 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag(tags.names, s, tags.layouts) 
 end
 -- }}}
 
@@ -252,6 +255,11 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+    awful.key({ modkey, "Shift"   }, "Tab",    function ()
+            -- If you want to always position the menu on the same place set coordinates
+            awful.menu.menu_keys.down = { "Down", "Alt_L" }
+            awful.menu:clients({theme = { width = 500 }}, { keygrabber=true, coords={x=525, y=330} })
+        end),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -414,12 +422,12 @@ awful.rules.rules = {
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c, startup)
     -- Enable sloppy focus
-    c:connect_signal("mouse::enter", function(c)
-        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-            and awful.client.focus.filter(c) then
-            client.focus = c
-        end
-    end)
+--    c:connect_signal("mouse::enter", function(c)
+--        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+--            and awful.client.focus.filter(c) then
+--            client.focus = c
+--        end
+--    end)
 
     if not startup then
         -- Set the windows at the slave,
