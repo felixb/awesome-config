@@ -21,6 +21,6 @@ function get_volume ()
 end
 
 
-function volume_closure ()
+function closure ()
     return function () return get_volume() end
 end

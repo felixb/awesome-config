@@ -40,29 +40,34 @@ end
 -- Battery
 require("battery")
 
-batterywidget = wibox.widget.textbox()
-batterywidget:set_align("right")
-bat_clo = battery.batclosure()
-batterywidget:set_text(bat_clo())
+battery_widget = wibox.widget.textbox()
+battery_widget:set_align("right")
+battery_closure = battery.closure()
+
+function battery_update()
+  battery_widget:set_text(" Bat: "..battery_closure().." ")
+end
+
+battery_update()
 battery_timer = timer({timeout = 30})
-battery_timer:connect_signal("timeout", function() batterywidget:set_text(bat_clo()) end)
+battery_timer:connect_signal("timeout", battery_update)
 battery_timer:start()
 --
 
 -- Volume
 require('volume')
 
-volumewidget = wibox.widget.textbox()
-volumewidget:set_align('right')
-volume_closure = volume.volume_closure()
+volume_widget = wibox.widget.textbox()
+volume_widget:set_align('right')
+volume_closure = volume.closure()
 
-function update_volumewidget()
-  volumewidget:set_text(volume_closure())
+function volume_update()
+  volume_widget:set_text(" Vol: "..volume_closure().." ")
 end
 
-update_volumewidget()
+volume_update()
 volume_timer = timer({timeout = 60})
-volume_timer:connect_signal('timeout', update_volumewidget)
+volume_timer:connect_signal('timeout', volume_update)
 volume_timer:start()
 --
 
@@ -112,11 +117,11 @@ end
 -- Define a tag table which hold all screen tags.
 tags = {
     names   = { 'www',      'msg',      'dev',      4,          5,          6,          7,          8,          9 },
-    layouts = { layouts[2], layouts[2], layouts[2], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] } 
+    layouts = { layouts[2], layouts[2], layouts[2], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag(tags.names, s, tags.layouts) 
+    tags[s] = awful.tag(tags.names, s, tags.layouts)
 end
 -- }}}
 
@@ -227,8 +232,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(volumewidget)
-    right_layout:add(batterywidget)
+    right_layout:add(volume_widget)
+    right_layout:add(battery_widget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -288,9 +293,9 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Media
-    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 -5%') ; update_volumewidget() end),
-    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 +5%') ; update_volumewidget() end),
-    awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('pactl set-sink-mute 0 toggle') ; update_volumewidget() end),
+    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 -5%') ; volume_update() end),
+    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 +5%') ; volume_update() end),
+    awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('pactl set-sink-mute 0 toggle') ; volume_update() end),
 
 
     -- Standard program

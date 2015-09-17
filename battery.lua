@@ -2,11 +2,6 @@
 
 local io = io
 local math = math
-local naughty = naughty
-local beautiful = beautiful
-local tonumber = tonumber
-local tostring = tostring
-local print = print
 local pairs = pairs
 
 module("battery")
@@ -92,20 +87,19 @@ function getnextlim (num)
     end
 end
 
-function batclosure ()
+function closure ()
     local adapters = get_adapters()
     local nextlim = limits[1][1]
     return function ()
         local prefix = "⚡"
-	local time = get_bat_time()
+        local time = get_bat_time()
         local batteries = ""
         for i=1, #adapters do
             adapter = adapters[i]
             local battery, dir = get_bat_state(adapter)
             if dir == -1 then
                 dirsign = "▼"
-                prefix = "Bat: "
-                prefix = prefix .. time
+                prefix = "🔋"..time
                 if battery <= nextlim then
                     naughty.notify({title = "⚡ Beware! ⚡",
                                 text = "Battery charge is low ( ⚡ "..battery.."%)!",
@@ -125,6 +119,6 @@ function batclosure ()
             battery = battery.."%"
             batteries = batteries..dirsign.." "..battery.." "
         end
-        return " "..prefix.." "..batteries
+        return prefix.." "..batteries:gsub("%s+$", '')
     end
 end
