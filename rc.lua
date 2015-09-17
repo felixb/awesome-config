@@ -403,6 +403,21 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
+
+local target_tags = {}
+local show_tag = {}
+
+if (screen.count() == 3) then
+  target_tags['Chromium-browser'] = tags[2][1]
+  target_tags['jetbrains-rubymine'] = tags[3][3]
+  awful.tag.viewonly(tags[1][2]) -- show msg tag on 1st screen
+  awful.tag.viewonly(tags[2][1]) -- show www tag on 2nd screen
+  awful.tag.viewonly(tags[3][3]) -- show dev tag on 3rd screen
+else
+  target_tags['Chromium-browser'] = tags[1][1]
+  show_tag[1] = 1
+end
+
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
@@ -413,7 +428,9 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons } },
     { rule = { class = "Chromium-browser" },
-      properties = { tag = tags[1][1] } },
+      properties = { tag = target_tags['Chromium-browser'] } },
+    { rule = { class = "jetbrains-rubymine" },
+      properties = { tag = target_tags['jetbrains-rubymine'] } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "pinentry" },
