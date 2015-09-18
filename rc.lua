@@ -293,9 +293,9 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Media
-    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 -5%') ; volume_update() end),
-    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('pactl set-sink-volume 0 +5%') ; volume_update() end),
-    awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('pactl set-sink-mute 0 toggle') ; volume_update() end),
+    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh -5%') ; volume_update() end),
+    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh +5%') ; volume_update() end),
+    awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh toggle') ; volume_update() end),
 
 
     -- Standard program
