@@ -408,11 +408,11 @@ local target_tags = {}
 local show_tag = {}
 
 if (screen.count() == 3) then
-  target_tags['Chromium-browser'] = tags[2][1]
-  target_tags['jetbrains-rubymine'] = tags[3][3]
+  target_tags['Chromium-browser'] = tags[3][1]
+  target_tags['jetbrains-rubymine'] = tags[2][3]
   awful.tag.viewonly(tags[1][2]) -- show msg tag on 1st screen
-  awful.tag.viewonly(tags[2][1]) -- show www tag on 2nd screen
-  awful.tag.viewonly(tags[3][3]) -- show dev tag on 3rd screen
+  awful.tag.viewonly(tags[2][3]) -- show dev tag on 2rd screen
+  awful.tag.viewonly(tags[3][1]) -- show www tag on 3nd screen
 else
   target_tags['Chromium-browser'] = tags[1][1]
   show_tag[1] = 1
