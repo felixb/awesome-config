@@ -100,16 +100,17 @@ function closure ()
             if dir == -1 then
                 dirsign = "▼"
                 prefix = "🔋"..time
-                if battery <= nextlim then
-                    naughty.notify({title = "⚡ Beware! ⚡",
-                                text = "Battery charge is low ( ⚡ "..battery.."%)!",
-                                timeout = 7,
-                                position = "bottom_right",
-                                fg = beautiful.fg_focus,
-                                bg = beautiful.bg_focus
-                                })
-                    nextlim = getnextlim(battery)
-                end
+-- disable battery notification for now
+--                 if battery <= nextlim then
+--                     naughty.notify({title = "⚡ Beware! ⚡",
+--                                 text = "Battery charge is low ( ⚡ "..battery.."%)!",
+--                                 timeout = 7,
+--                                 position = "bottom_right",
+--                                 fg = beautiful.fg_focus,
+--                                 bg = beautiful.bg_focus
+--                                 })
+--                     nextlim = getnextlim(battery)
+--                 end
             elseif dir == 1 then
                 dirsign = "▲"
                 nextlim = limits[1][1]
