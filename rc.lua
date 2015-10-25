@@ -10,6 +10,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+local revelation=require("revelation")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -78,6 +79,7 @@ awful.util.spawn_with_shell(".config/awesome/bin/autostart.sh")
 -- Themes define colours, icons, font and wallpapers.
 --- beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 beautiful.init(".config/awesome/themes/zenburn/theme.lua")
+revelation.init()
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -297,7 +299,6 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh +5%') ; volume_update() end),
     awful.key({}, "XF86AudioMute", function () awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh toggle') ; volume_update() end),
 
-
     -- Standard program
     awful.key({ modkey,           }, "t", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
@@ -324,7 +325,10 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+    awful.key({ modkey }, "p", function() menubar.show() end),
+
+    -- Revelation
+    awful.key({ modkey }, "e", revelation)
 )
 
 clientkeys = awful.util.table.join(
