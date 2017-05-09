@@ -47,3 +47,4 @@ elif [ $(listConnectedDisplays | wc -l) -gt 1 ]; then
 else #if it's not connected
   off
 fi
+
