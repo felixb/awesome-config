@@ -1,4 +1,4 @@
 awesome config
 ==============
 
-My personal awesome 3.5 config.
+My personal awesome 4.0 config.
