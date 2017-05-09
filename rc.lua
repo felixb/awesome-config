@@ -10,6 +10,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local revelation=require("revelation")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -69,6 +70,8 @@ volume_timer = timer({timeout = 60})
 volume_timer:connect_signal('timeout', volume_update)
 volume_timer:start()
 --
+
+revelation.init()
 
 -- autostart
 awful.util.spawn_with_shell(".config/awesome/bin/autostart.sh")
@@ -366,6 +369,8 @@ globalkeys = awful.util.table.join(
                   }
               end,
               {description = "lua execute prompt", group = "awesome"}),
+    -- Revelation
+    awful.key({ modkey }, "e", revelation),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
