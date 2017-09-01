@@ -354,6 +354,9 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
     awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh -5%'); volume_update() end),
     awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh +5%'); volume_update() end),
     awful.key({}, "XF86AudioMute", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh toggle'); volume_update() end),
+    awful.key({}, "XF86Tools", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh') end),
+    awful.key({}, "XF86Search", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh off') end),
+    awful.key({}, "XF86Explorer", function() awful.util.spawn_with_shell('lock') end),
 
 
     -- Standard program
@@ -380,6 +383,7 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
         { description = "select next", group = "layout" }),
     awful.key({ modkey, "Shift" }, "space", function() awful.layout.inc(-1) end,
         { description = "select previous", group = "layout" }),
+    awful.key({ modkey, "Shift", "Control" }, "l", function() awful.util.spawn_with_shell('autopass') end),
 
     awful.key({ modkey, "Control" }, "n",
         function()
