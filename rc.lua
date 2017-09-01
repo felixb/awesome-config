@@ -354,6 +354,8 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
     awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh -5%'); volume_update() end),
     awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh +5%'); volume_update() end),
     awful.key({}, "XF86AudioMute", function() awful.util.spawn_with_shell('.config/awesome/bin/setvolume.sh toggle'); volume_update() end),
+    awful.key({}, "XF86MonBrightnessDown", function() awful.util.spawn_with_shell('.config/awesome/bin/brightness.sh -0.1') end),
+    awful.key({}, "XF86MonBrightnessUp", function() awful.util.spawn_with_shell('.config/awesome/bin/brightness.sh +0.1') end),
     awful.key({}, "XF86Tools", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh') end),
     awful.key({}, "XF86Search", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh off') end),
     awful.key({}, "XF86Explorer", function() awful.util.spawn_with_shell('lock') end),
