@@ -359,6 +359,7 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
     awful.key({}, "XF86Tools", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh') end),
     awful.key({}, "XF86Search", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors.sh off') end),
     awful.key({}, "XF86Explorer", function() awful.util.spawn_with_shell('lock') end),
+    awful.key({ modkey }, "XF86Explorer", function() awful.util.spawn_with_shell('locks') end),
 
 
     -- Standard program
