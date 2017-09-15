@@ -1,0 +1,4 @@
+#! /bin/bash
+
+color=${1:-'dark'}
+cp ~/.config/xfce4/terminal/terminalrc.${color}* ~/.config/xfce4/terminal/terminalrc
