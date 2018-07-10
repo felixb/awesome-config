@@ -26,6 +26,10 @@ elif [ "${1}" = 'tv' ] ; then
     --output VGA1 --mode 1360x768 --right-of eDP-1
 elif [ "${1}" = 'pair' ] ; then
   xrandr \
+    --output eDP-1 --mode 1680x1050 --pos 0x0 \
+    --output DP-2-2 --mode 1680x1050 --same-as eDP-1
+elif [ "${1}" = 'pair3' ] ; then
+  xrandr \
     --output eDP-1 --mode 2560x1440 --pos 0x0 \
     --output DP-2-2 --mode 1680x1050 --right-of eDP-1 \
     --output DP-2-3 --mode 1680x1050 --same-as DP-2-2
