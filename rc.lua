@@ -42,7 +42,7 @@ end
 -- }}}
 
 -- Battery
-require("battery")
+battery = require("battery")
 
 battery_widget = wibox.widget.textbox()
 battery_widget:set_align("right")
@@ -59,7 +59,7 @@ battery_timer:start()
 --
 
 -- Volume
-require('volume')
+volume = require('volume')
 
 volume_widget = wibox.widget.textbox()
 volume_widget:set_align('right')

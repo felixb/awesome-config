@@ -1,10 +1,9 @@
 -- volume widget
 
+local volume = {}
 local io = io
 
-module("volume")
-
-function get_sink()
+local function get_sink()
     local fp = io.popen('pactl list short sinks | grep analog | cut -f1 | head -n1')
     local sink = fp:read()
     fp:close()
@@ -16,7 +15,7 @@ function get_sink()
     end
 end
 
-function get_volume (sink)
+local function get_volume (sink)
     local fvol = io.popen("pactl list sinks | perl -000ne 'if(/#"..sink.."/){/(Volume:.*)/; print \"$1\n\"}' | grep -o '[0-9]*%' | head -n1")
     local vol = fvol:read()
     fvol:close()
@@ -32,7 +31,9 @@ function get_volume (sink)
     end
 end
 
-function closure ()
+function volume.closure ()
     local sink = get_sink()
     return function () return get_volume(sink) end
 end
+
+return volume

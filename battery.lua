@@ -4,19 +4,19 @@ local io = io
 local math = math
 local pairs = pairs
 
-module("battery")
+local battery = {}
 
 local limits = {{25, 5},
           {12, 3},
           { 7, 1},
             {0}}
 
-function file_exists(name)
+local function file_exists(name)
    local f=io.open(name,"r")
    if f~=nil then io.close(f) return true else return false end
 end
 
-function get_adapters()
+local function get_adapters()
     local adapters = {'BAT0', 'BAT1'}
     local found_adapters = {}
     local c = 1
@@ -29,7 +29,7 @@ function get_adapters()
     return found_adapters
 end
 
-function get_bat_state (adapter)
+local function get_bat_state (adapter)
     local adapter_path = "/sys/class/power_supply/"..adapter
     local fprefix = ""
     if file_exists(adapter_path.."/energy_now") then
@@ -58,7 +58,7 @@ function get_bat_state (adapter)
     return battery, dir
 end
 
-function get_bat_time ()
+local function get_bat_time ()
     local facp = io.popen("acpi -b")
     local acp = facp:read()
     facp:close()
@@ -72,7 +72,7 @@ function get_bat_time ()
     end
 end
 
-function getnextlim (num)
+local function getnextlim (num)
     for ind, pair in pairs(limits) do
         lim = pair[1]; step = pair[2]; nextlim = limits[ind+1][1] or 0
         if num > nextlim then
@@ -87,7 +87,7 @@ function getnextlim (num)
     end
 end
 
-function closure ()
+function battery.closure ()
     local adapters = get_adapters()
     local nextlim = limits[1][1]
     return function ()
@@ -123,3 +123,5 @@ function closure ()
         return prefix.." "..batteries:gsub("%s+$", '')
     end
 end
+
+return battery
