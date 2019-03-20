@@ -1,10 +1,29 @@
-#! /bin/sh
+#! /bin/bash
 
-SINK=$(pactl list short sinks | grep analog | cut -f1 | head -n1)
-SINK=${SINK:-0}
+function default_sink() {
+  pacmd stat | grep 'Default sink name:' | cut -d':' -f2 | tr -d ' '
+}
+
+function get_volume() {
+  pacmd list-sinks | grep -A10 "${1}" | grep volume: | head -n1 | grep -o '[0-9]*%' | head -n1
+}
+
+function get_mute() {
+  pacmd list-sinks | grep -A15 "${1}" | grep 'muted:' | head -n1 | cut -d: -f2 | tr -d ' '
+}
+
+SINK=${SINK:-@DEFAULT_SINK@}
 
 if [ "${1}" = 'toggle' ] ; then
   exec pactl set-sink-mute ${SINK} toggle
+elif [ "${1}" = 'get' ]; then
+  SINK=$(default_sink)
+  volume=$(get_volume "${SINK}")
+  if [ "$(get_mute ${SINK})" = 'yes' ]; then
+    echo "(${volume})"
+  else
+    echo "${volume}"
+  fi
 else
   exec pactl set-sink-volume ${SINK} ${1:-100%}
 fi
