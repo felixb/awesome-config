@@ -59,17 +59,10 @@ local function get_bat_state (adapter)
 end
 
 local function get_bat_time ()
-    local facp = io.popen("acpi -b")
+    local facp = io.popen("acpi -b | grep -o '[^ ]* remaining' | cut -d' ' -f1")
     local acp = facp:read()
     facp:close()
-
-    if acp:match('remaining') then
-        local idx = acp:find('remaining')
-        local time = acp:sub(idx - 8, idx - 5)
-        return time
-    else
-        return ''
-    end
+    return acp
 end
 
 local function getnextlim (num)
