@@ -356,10 +356,10 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
     awful.key({}, "XF86AudioMute", function() awful.util.spawn_with_shell('.config/awesome/bin/volume toggle'); volume_update() end),
     awful.key({}, "XF86MonBrightnessDown", function() awful.util.spawn_with_shell('.config/awesome/bin/screen-brightness -0.1') end),
     awful.key({}, "XF86MonBrightnessUp", function() awful.util.spawn_with_shell('.config/awesome/bin/screen-brightness +0.1') end),
-    awful.key({}, "XF86Tools", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors') end),
-    awful.key({}, "XF86Search", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors off') end),
-    awful.key({}, "XF86Explorer", function() awful.util.spawn_with_shell('lock') end),
-    awful.key({ modkey }, "XF86Explorer", function() awful.util.spawn_with_shell('locks') end),
+    awful.key({}, "XF86Display", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors') end),
+    awful.key({}, "XF86Tools", function() awful.util.spawn_with_shell('.config/awesome/bin/monitors off') end),
+    awful.key({ "Control" }, "#", function() awful.util.spawn_with_shell('lock') end),
+    awful.key({ modkey, "Control" }, "#", function() awful.util.spawn_with_shell('locks') end),
 
 
     -- Standard program
